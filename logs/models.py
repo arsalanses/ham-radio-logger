@@ -1,6 +1,8 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils.timezone import now
 from django.conf import settings
 from django.db import models
+
 
 class LogBook(models.Model):
     owner       = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='logbooks', on_delete=models.CASCADE)
@@ -26,9 +28,8 @@ class Log(models.Model):
     )
 
     mode            = models.CharField(max_length=10, choices=MODE_CHOICES, blank=False, null=False)
-    date            = models.DateTimeField(auto_now_add=True, blank=False, null=False)
+    datetime        = models.DateTimeField(default=now, blank=True, null=True)
     frequency       = models.FloatField(default=0000.00, blank=False, null=False)
-    time            = models.TimeField(auto_now_add=True, blank=False, null=False)
     callsign        = models.CharField(max_length=10, blank=False, null=False)
     band            = models.FloatField(blank=False, null=False)
 
