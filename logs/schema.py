@@ -1,19 +1,27 @@
-from django.conf import settings
-from datetime import time, date
-from ninja import Schema
+from logs.models import Log, LogBook
+from ninja import Schema, ModelSchema
 
-class LogSchema(Schema):
-    mode: str
-    date: date
-    frequency: float
-    time: time
-    callsign: str
-    band: float
 
-class LogBookSchema(Schema):
-    owner: settings.AUTH_USER_MODEL
-    name: str
-    description: date
+class LogBookSchemaIN(ModelSchema):
+    owner_id: int
 
-class NotFoundSchema(Schema):
-    message: str
+    class Config:
+        model = LogBook
+        model_fields = ['name', 'description']
+
+class LogBookSchemaOUT(ModelSchema):
+    class Config:
+        model = LogBook
+        model_fields = ['id', 'name', 'description', 'owner']
+
+class LogSchemaIN(ModelSchema):
+    book_id: int = None
+
+    class Config:
+        model = Log
+        model_fields = ['mode', 'datetime', 'frequency', 'callsign', 'band']
+
+class LogSchemaOUT(ModelSchema):
+    class Config:
+        model = Log
+        model_fields = ['id', 'mode', 'datetime', 'frequency', 'callsign', 'band', 'book']
